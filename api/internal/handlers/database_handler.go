@@ -39,7 +39,7 @@ func (dh *databaseHandler) CreateDatabase(c *gin.Context) {
 		if strings.Contains(err.Error(), "not found") {
 			statusCode = http.StatusNotFound
 		}
-		c.IndentedJSON(statusCode, gin.H{"message": err.Error()}) //TODO: mejorar respuesta de error		return
+		c.IndentedJSON(statusCode, gin.H{"message": err.Error()})
 	}
 	dh.logger.Info("database saved", map[string]any{"database_id": dbID})
 	c.IndentedJSON(http.StatusCreated, gin.H{"message": "created", "database_id": dbID})
@@ -61,7 +61,7 @@ func (dh *databaseHandler) GetDatabaseScanResult(c *gin.Context) {
 		if strings.Contains(err.Error(), "not found") {
 			statusCode = http.StatusNotFound
 		}
-		c.IndentedJSON(statusCode, gin.H{"message": err.Error()}) //TODO: mejorar respuesta de error
+		c.IndentedJSON(statusCode, gin.H{"message": err.Error()})
 		return
 	}
 	dh.logger.Info("database scan retrived", map[string]any{"database_id": dbID})
