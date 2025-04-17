@@ -1,0 +1,63 @@
+# LOCAL BD
+services:
+  db-local:
+    image: mysql:8.0
+    container_name: mysql_db_local
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: localdb
+      MYSQL_USER: localuser
+      MYSQL_PASSWORD: localpass
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db-scripts/local:/docker-entrypoint-initdb.d  
+    ports:
+      - "3306:3306"
+    networks:
+      - go-network
+
+# EXTERNAL BD
+  db-external:
+    image: mysql:8.0
+    container_name: mysql_db_external 
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: externaldb
+      MYSQL_USER: externaluser
+      MYSQL_PASSWORD: externalpass
+    volumes:
+      - mysql_data_external:/var/lib/mysql
+      - ./db-scripts/external:/docker-entrypoint-initdb.d  
+    ports:
+      - "3307:3306"  
+    networks:
+      - go-network
+
+# API REST
+  api:
+    build: .
+    container_name: go_api
+    depends_on:
+      - db-local
+      - db-external
+    ports:
+      - "443:443"
+    environment:
+      DB_HOST: db-local
+      DB_PORT: 3306
+      DB_USER: localuser
+      DB_PASSWORD: localpass
+      DB_NAME: localdb
+      AUTH_USERNAME: MELI
+      AUTH_PASSWORD: password123
+      CIPHER_KEY: 16-char-key-1234
+    networks:
+      - go-network
+
+volumes:
+  mysql_data:
+  mysql_data_external:
+
+networks:
+  go-network:
+    driver: bridge

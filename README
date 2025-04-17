@@ -1,0 +1,6 @@
+para iniciar proyecto
+docker-compose up --build
+
+para borrar los datos almacenados
+docker-compose down      
+docker volume rm mysql_data mysql_data_external
